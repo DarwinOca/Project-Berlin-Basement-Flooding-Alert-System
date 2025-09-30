@@ -1,0 +1,62 @@
+services:
+  monitor:
+    build:
+      context: .
+      dockerfile: monitor.Dockerfile
+    container_name: monitor
+    ports:
+      - "3000:3000" # Grafana
+      - "3100:3100" # Loki
+      - "9090:9090" # Prometheus
+    env_file: ".env"
+    volumes:
+      - ./monitor/logs:/monitor
+      - prometheus-storage:/prometheus
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - mlops-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: fastapi.Dockerfile
+    container_name: fastapi-mlfow
+    ports:
+      - "5000:5000" # MLFlow
+      - "8000:8000" # FastAPI
+    env_file: ".env"
+    depends_on:
+      - monitor
+    volumes:
+      - ./src:/app
+      - ./data:/data
+      - ./mlflow:/mlflow
+    networks:
+      - mlops-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: streamlit.Dockerfile
+    container_name: streamlit-frontend
+    ports:
+      - "8501:8501"
+      - "8502:8502"
+    env_file: ".env"
+    depends_on:
+      - backend
+    volumes:
+      - ./src/fe:/app
+      - ./data:/data
+    networks:
+      - mlops-network
+
+networks:
+  mlops-network:
+    driver: bridge
+
+volumes:
+  prometheus-storage:
+    driver: local
+  grafana-storage:
+    driver: local

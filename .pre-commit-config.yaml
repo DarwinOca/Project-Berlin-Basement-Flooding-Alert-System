@@ -1,0 +1,6 @@
+
+repos:
+- repo: https://github.com/DataScientest-Studio/jul25_bmlops_flooding
+  rev: 0.0.1
+  hooks:
+    - id: nbstripout

@@ -1,0 +1,14 @@
+streamlit==1.36.0
+requests==2.32.3
+pandas==2.2.2
+python-dotenv==1.1.1
+numpy
+streamlit-folium
+folium
+requests
+plotly
+mysql-connector-python==9.4.0
+sqlalchemy==2.0.43
+streamlit-autorefresh
+prometheus-client==0.22.1
+plotly

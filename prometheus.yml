@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s 
+
+scrape_configs:
+  - job_name: 'prometheus-in-combo'
+    static_configs:
+      - targets: ['localhost:9090'] # Target the Prometheus instance inside the container
+
+  # Target the FastAPI Backend (from the main docker-compose network)
+  - job_name: 'fastapi_backend'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['fastapi-mlfow:8000'] 
+
+  - job_name: 'streamlit-metrics'
+    static_configs:
+      - targets: ['streamlit-frontend:8502']
